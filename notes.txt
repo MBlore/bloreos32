@@ -1,0 +1,42 @@
+nasm -f bin bootloader.asm -o bootloader.bin
+
+i686-elf-gcc -c kernel.c -o kernel.o -nostdlib -nostartfiles -ffreestanding
+
+i686-elf-ld -T linker.ld kernel.o -o kernel.elf
+
+cat bootloader.bin kernel.elf > os.img
+
+dd if=os.img of=os_aligned.img bs=512 conv=sync
+
+C:\Program Files\Oracle\VirtualBox\VBoxManage.exe convertfromraw D:\Projects\BloreOS\os_aligned.img D:\Projects\BloreOS\os.vdi --format VDI
+
+http://www.jamesmolloy.co.uk/tutorial_html/1.-Environment%20setup.html
+
+https://github.com/lordmilko/i686-elf-tools/releases
+
+https://wiki.osdev.org/Setting_Up_Long_Mode#Overview
+
+https://wiki.osdev.org/A20_Line
+
+https://dev.to/frosnerd/writing-my-own-boot-loader-3mld
+
+https://sonictk.github.io/asm_tutorial/#cpus:ahardwarerefresher/registers/general-purposeregisters
+
+https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
+
+64-bit mode:
+"you have the page-directory pointer table (PDPT), the page-directory table (PDT) and the page table (PT)"
+"There's also another table which now forms the root (instead of the PDPT or the PDT) and that is page-map level-4 table (PML4T)"
+
+PML4T (512GB) -> PDPT
+PDPT (1GB) -> PDT
+PDT (2MB) -> PT (4KB)
+PT = Physical Address
+
+Each table is 512 entries.
+PML4T[0] = first 512GB
+
+
+
+
+
